@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdbool.h>
 
 bool delim_character(char c);
@@ -69,12 +70,20 @@ int count_tokens(char* str)
       tokens[2] = "string"
       tokens[3] = 0
 */
-/*
+
 char *copy_str(char *inStr, short len)
 {
+  char *new_word = (char*)malloc((len)*sizeof(char));
+  if (new_word == NULL) printf("Memory not allocated.\n");
 
+  for (int i = 0; i < len; i++) {
+    *(new_word+i) = *(inStr+i);
+  }
+  *(new_word+len) ='\0';
+  return new_word;
 }
 
+/*
 char** tokenize(char* str)
 {
 
@@ -103,6 +112,9 @@ int main()
   char word[50];
   printf("Enter a string to be counted:\n");
   fgets(word, sizeof(word), stdin);
-  printf("Number of words = %i\n",count_tokens(word));
+  int num_chars = count_chars(word);
+  printf("Number of words = %i\n",num_chars);
+  char* new_word = copy_str(word, num_chars);
+  printf("Newly copied string: %s\n", new_word);
   return 0;
 }
