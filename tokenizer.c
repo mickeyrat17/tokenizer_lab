@@ -104,6 +104,8 @@ char** tokenize(char* str)
     *(tokens+i) = wordToken;
     str=word_start(str);
     }
+
+  //Adds zero terminator to the end of the **tokens
   char *wordTerminator = copy_str('\0', 0);
   *(tokens+numWords) = wordTerminator;
   return tokens;
@@ -136,14 +138,11 @@ short count_chars(char *wordStart)
 int main()
 {
   char word[50];
-  printf("Enter a string to be counted:\n");
+  printf("Please enter the input string:\n");
+  printf("$ ");
   fgets(word, sizeof(word), stdin);
-  int num_tokens = count_tokens(word);
-  printf("Number of words = %i\n",num_tokens);
 
   char** tokens = tokenize(word);
   print_all_tokens(tokens);
-  //char* new_word = copy_str(word, num_chars);
-  //printf("Newly copied string: %s\n", new_word);
   return 0;
 }
