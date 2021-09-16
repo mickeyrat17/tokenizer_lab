@@ -8,7 +8,11 @@ char *word_start(char* str);
 char *end_word(char* str);
 int count_tokens(char* str);
 
-int count_chars(char *word);
+void print_all_tokens(char** tokens);
+char *copy_str(char *inStr, short len);
+char** tokenize(char* str);
+
+short count_chars(char *wordStart);
 
 /* Return true (non-zero) if c is a whitespace character
   ('\t' or ' ').
@@ -83,25 +87,47 @@ char *copy_str(char *inStr, short len)
   return new_word;
 }
 
-/*
+
 char** tokenize(char* str)
 {
+  int numWords = count_tokens(str);
+  char **tokens=(char**)malloc((numWords+1)*sizeof(char*));
+  if (tokens == NULL) printf("Memory not allocated.\n");
 
+  if (delim_character(*str)) str = word_start(str);
+  for(int i = 0; i < numWords; i++) {
+    char *wordHead = str;
+    char *wordTail = end_word(wordHead);
+    short wordLen = count_chars(wordHead);
+    char *wordToken = copy_str(wordHead, wordLen);
+
+    *(tokens+i) = wordToken;
+    str=word_start(str);
+    }
+  char *wordTerminator = copy_str('\0', 0);
+  *(tokens+numWords) = wordTerminator;
+  return tokens;
 }
+
 
 void print_all_tokens(char** tokens)
 {
-
+  int count = 0;
+  while (**tokens != '\0') {
+    char *currWord = *tokens;
+    printf("tokens[%i] = \"%s\"\n", count,currWord);
+    tokens++;
+    count++;
+  }
 }
-*/
+
 
 //counts the number of chars (spaces and words) in the inputted string
-//counts the zero terminator at the end of the string as well
-int count_chars(char *word)
+short count_chars(char *wordStart)
 {
   int count = 0;
-  while (*word != '\0'){
-    word++;
+  while (!delim_character(*wordStart)){
+    wordStart++;
     count++;
   }
   return count;
@@ -112,9 +138,12 @@ int main()
   char word[50];
   printf("Enter a string to be counted:\n");
   fgets(word, sizeof(word), stdin);
-  int num_chars = count_chars(word);
-  printf("Number of words = %i\n",num_chars);
-  char* new_word = copy_str(word, num_chars);
-  printf("Newly copied string: %s\n", new_word);
+  int num_tokens = count_tokens(word);
+  printf("Number of words = %i\n",num_tokens);
+
+  char** tokens = tokenize(word);
+  print_all_tokens(tokens);
+  //char* new_word = copy_str(word, num_chars);
+  //printf("Newly copied string: %s\n", new_word);
   return 0;
 }
