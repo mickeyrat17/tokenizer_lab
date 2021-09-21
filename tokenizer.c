@@ -2,16 +2,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-bool delim_character(char c);
-bool non_delim_character(char c);
-char *word_start(char* str);
-char *end_word(char* str);
-int count_tokens(char* str);
-
-void print_all_tokens(char** tokens);
-char *copy_str(char *inStr, short len);
-char** tokenize(char* str);
-
 short count_chars(char *wordStart);
 
 /* Return true (non-zero) if c is a whitespace character
@@ -55,7 +45,7 @@ char *end_word(char* str)
   return str;
 }
 
-// counts the number of words or tokens
+// counts the number of words or tokens in the str
 int count_tokens(char* str)
 {
   int count = 0;
@@ -77,9 +67,10 @@ int count_tokens(char* str)
 
 char *copy_str(char *inStr, short len)
 {
-  char *new_word = (char*)malloc((len)*sizeof(char));
+  //Allocates memory based on the size of the word
+  char *new_word = (char*)malloc((len+1)*sizeof(char));
   if (new_word == NULL) printf("Memory not allocated.\n");
-
+  //adds each letter to allocated memory
   for (int i = 0; i < len; i++) {
     *(new_word+i) = *(inStr+i);
   }
@@ -91,6 +82,7 @@ char *copy_str(char *inStr, short len)
 char** tokenize(char* str)
 {
   int numWords = count_tokens(str);
+  //Allocates memory based on the number of words in the str
   char **tokens=(char**)malloc((numWords+1)*sizeof(char*));
   if (tokens == NULL) printf("Memory not allocated.\n");
 
@@ -100,7 +92,7 @@ char** tokenize(char* str)
     char *wordTail = end_word(wordHead);
     short wordLen = count_chars(wordHead);
     char *wordToken = copy_str(wordHead, wordLen);
-
+    //selects appropriate *token to point to the current word
     *(tokens+i) = wordToken;
     str=word_start(str);
     }
@@ -111,7 +103,8 @@ char** tokenize(char* str)
   return tokens;
 }
 
-
+/*prints out all the tokens in this format:
+  tokens[0] = "hello" */
 void print_all_tokens(char** tokens)
 {
   int count = 0;
@@ -123,8 +116,8 @@ void print_all_tokens(char** tokens)
   }
 }
 
-
-//counts the number of chars (spaces and words) in the inputted string
+/*counts the number of chars
+  till delim_character appears*/
 short count_chars(char *wordStart)
 {
   int count = 0;
